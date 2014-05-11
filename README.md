@@ -7,6 +7,8 @@ The following two Arduino libraries are required and must be available in the Ar
 - DHT from https://github.com/markruys/arduino-DHT
 - WT450Sender from https://github.com/GraemeWieden/WT450Sender
 
-For full step-by-step instructions on how to put together the hardware and software, take a look at this project's wiki.
+For full step-by-step instructions on how to put together the hardware and software, take a look at this project's wiki here:
+
+https://github.com/GraemeWieden/temp_hum_sender/wiki
 
 
