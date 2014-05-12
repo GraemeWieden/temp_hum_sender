@@ -18,8 +18,8 @@
         <header class="inner">
           <a id="forkme_banner" href="https://github.com/GraemeWieden/temp_hum_sender">View on GitHub</a>
 
-          <h1 id="project_title">Temp hum sender</h1>
-          <h2 id="project_tagline">Temperature and humidity sensor and sender project</h2>
+          <h1 id="project_title">Temperature and Humidity Sensor</h1>
+          <h2 id="project_tagline">Wireless temperature and humidity sensor  project for Ninja Blocks</h2>
 
             <section id="downloads">
               <a class="zip_download_link" href="https://github.com/GraemeWieden/temp_hum_sender/zipball/master">Download this project as a .zip file</a>
@@ -32,10 +32,26 @@
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
         <h1>
-<a name="temperature-and-humidity-sensor-and-sender-project" class="anchor" href="#temperature-and-humidity-sensor-and-sender-project"><span class="octicon octicon-link"></span></a>Temperature and humidity sensor and sender project</h1>
+  Just what are we making?</h1>
 
-<p>This Arduino project illustrates how to use an inexpensive DHT series temperature and humidity sensor and a 433 MHz ASK RF transmitter module with an Arduino to emulate the standard Ninja Blocks wireless temperature/humidity sensor.</p>
-
+<p>This project will walk through the process of building an Arduino based temperature and humidity sensor that essentially emulates the unit that's included in the standard Ninja Blocks kit.</p>
+<p>For hardware, we'll be using an inexpensive DHT series temperature and humidity sensor, an RF transmitter module, and of course, an Arduino.</p>
+<p>For the software part, we'll need two Arduino libraries, and a simple sketch to read from the sensor and send the readings to the Ninja Block.</p>
+<h2>The sensor unit</h2>
+<p>You should be able to use any of the DHT series sensors. For this walkthrough, I'll be using a DHT11 temperature and humidity sensor module.</p>
+<p><img src="images/sensor.jpg" alt="DHT series sensor module" width="118" height="189"></p>
+<p>They're very inexpensive but only have 1 degree celcius precision. This one was about $3 from DX (<a href="http://www.dx.com/p/121350">http://www.dx.com/p/121350</a>). The DHT22 is a little more expensive but it gives you double the precision as well as being able to handle a much wider range for both temperature and humidity.</p>
+<h2>The RF transmitter</h2>
+<p>You'll need a 433 MHz RF transmitter that uses OOK (On/Off Keying) modulation.</p>
+<p><img src="images/transmitter.jpg" alt="RF transmitter module" width="132" height="131"></p>
+<p>Again, they cost very little. This one was about $2 from DX (<a href="http://www.dx.com/p/149254">http://www.dx.com/p/149254</a>).</p>
+<p>To get the best range out of the transmitter, you'll also need to add an antenna, but provided it's reasonably close to the Ninja Block, you can do without it while your prototyping. The antenna should be about 17 cm long. If you're wondering where that figure comes from, the formula is reasonably simple. The exact frequency of these transmitters is 433.92 MHz (433920000 cycles per second) so at (close to) the speed of light (299792458 metres per second) each cycle is:<br>
+1 / 433920000 * 299792458 = 0.69 metres or  69 cm<br>
+We typically use one quarter of the wavelength which works out to just over 17 cm. 
+</p>
+<h2>The Arduino</h2>
+<p>&nbsp;</p>
+<p><img src="images/arduino-nano.jpg" width="400" height="177"></p>
 <p>The following two Arduino libraries are required and must be available in the Arduino sketchbook <code>libraries</code> directory.</p>
 
 <ul>
@@ -43,8 +59,8 @@
 </li>
 <li>WT450Sender from <a href="https://github.com/GraemeWieden/WT450Sender">https://github.com/GraemeWieden/WT450Sender</a>
 </li>
-</ul><p><img src="images/arduino-nano.jpg" width="400" height="177"></p>
-<p><img src="images/sensor.jpg" width="199" height="320"><img src="images/transmitter.jpg" width="201" height="200"></p>
+</ul><p>&nbsp;</p>
+<p>&nbsp;</p>
 <p><img src="images/temp-hum-sender-02.jpg" width="379" height="400"></p>
 <p>&nbsp;</p>
       </section>
