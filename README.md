@@ -1,5 +1,8 @@
-Temperature and humidity sensor and sender project
-==================================================
+Temperature and Humidity Sensor
+===============================
+
+Wireless temperature and humidity sensor project for Ninja Blocks
+-----------------------------------------------------------------
 
 This Arduino project illustrates how to use an inexpensive DHT series temperature and humidity sensor and a 433 MHz ASK RF transmitter module with an Arduino to emulate the standard Ninja Blocks wireless temperature/humidity sensor.
 
