@@ -37,11 +37,11 @@
 <p>This project will walk through the process of building an Arduino based temperature and humidity sensor that essentially emulates the unit that's included in the standard Ninja Blocks kit.</p>
 <p>For hardware, we'll be using an inexpensive DHT series temperature and humidity sensor, an RF transmitter module, and of course, an Arduino.</p>
 <p>For the software part, we'll need two Arduino libraries, and a simple sketch to read from the sensor and send the readings to the Ninja Block.</p>
-<h2>The sensor unit</h2>
+<h2>The sensor module</h2>
 <p>You should be able to use any of the DHT series sensors. For this walkthrough, I'll be using a DHT11 temperature and humidity sensor module.</p>
 <p><img src="images/sensor.jpg" alt="DHT series sensor module" width="118" height="189"></p>
-<p>They're very inexpensive but only have 1 degree celcius precision. This one was about $3 from DX (<a href="http://www.dx.com/p/121350">http://www.dx.com/p/121350</a>). The DHT22 is a little more expensive but it gives you double the precision as well as being able to handle a much wider range for both temperature and humidity.</p>
-<h2>The RF transmitter</h2>
+<p>They're very inexpensive but only have 1 degree Celsius precision. This one was about $3 from DX (<a href="http://www.dx.com/p/121350">http://www.dx.com/p/121350</a>). The DHT22 is a little more expensive but it gives you double the precision as well as being able to handle a much wider range for both temperature and humidity.</p>
+<h2>The RF transmitter module</h2>
 <p>You'll need a 433 MHz RF transmitter that uses OOK (On/Off Keying) modulation.</p>
 <p><img src="images/transmitter.jpg" alt="RF transmitter module" width="132" height="131"></p>
 <p>Again, they cost very little. This one was about $2 from DX (<a href="http://www.dx.com/p/149254">http://www.dx.com/p/149254</a>).</p>
@@ -50,18 +50,56 @@
 We typically use one quarter of the wavelength which works out to just over 17 cm. 
 </p>
 <h2>The Arduino</h2>
-<p>&nbsp;</p>
+<p>Most Arduinos will work with this project, but the Arduino Nano is really compact so it's what I'll be using in this walkthrough.</p>
 <p><img src="images/arduino-nano.jpg" width="400" height="177"></p>
-<p>The following two Arduino libraries are required and must be available in the Arduino sketchbook <code>libraries</code> directory.</p>
+<p>If you shop around, you can get Arduino Nanos for under $6 but this one was around $8 from DX (<a href="http://www.dx.com/p/81877">http://www.dx.com/p/81877</a>).</p>
+<h2>Connecting the hardware
+</h2>
+<p>Connecting the modules is a pretty straightforward operation but just pay careful attention to which pins are 5V, Ground and Data. We'll be using Digital Pin 3 for the sensor data and Digital Pin 4 for the transmitter data.</p>
+<p>You can organise things how you like, but here's one option if you're using mini breadboards for your Arduino prototyping:</p>
+<p><img src="images/breadboard.png" width="400" height="636"></p>
+<p>So your final assembly should look something like this:</p>
+<p><img src="images/temp-hum-sender-02.jpg" alt="" width="379" height="400"></p>
+<h2>Arduino software libraries</h2>
+<p>To make everything work, we'll need to have two Arduino libraries installed for use with the  IDE; one to communicate with the sensor and another to package up the sensor data for sending via the transmitter. Here's what we'll be using:</p>
 
 <ul>
-<li>DHT from <a href="https://github.com/markruys/arduino-DHT">https://github.com/markruys/arduino-DHT</a>
+  <li>DHT from <a href="https://github.com/markruys/arduino-DHT">https://github.com/markruys/arduino-DHT</a>
 </li>
 <li>WT450Sender from <a href="https://github.com/GraemeWieden/WT450Sender">https://github.com/GraemeWieden/WT450Sender</a>
 </li>
-</ul><p>&nbsp;</p>
-<p>&nbsp;</p>
-<p><img src="images/temp-hum-sender-02.jpg" width="379" height="400"></p>
+</ul>
+<p>Download both libraries and place them into your  Arduino <code>libraries</code> directory. If you're not sure where you're <code>libraries</code> directory is located, it's a subdirectory of your Arduino sketchbook directory which you can find by selecting 'Preferences' from the 'File' menu in the Arduino IDE.</p>
+<p>So all the files from Mark Ruys's excellent DHT sensor library must be in a <code>DHT</code> directory and all the files from my WT450Sender library must be in a <code>WT450Sender</code> directory.</p>
+<h2>Making it work</h2>
+<p>Now that you have all your hardware sorted out and the libraries installed, you can go ahead and get the Arduino sketch from here:</p>
+<p><a href="https://github.com/GraemeWieden/temp_hum_sender">https://github.com/GraemeWieden/temp_hum_sender</a></p>
+<p> Create a <code>temp_hum_sender</code> folder in your sketchbook folder and place the <code>temp_hum_sender.ino</code> file into it.</p>
+<p>If you're using the same Arduino pins for your hardware as shown above, then you should be able to just plug in the Arduino, open the sketch in the Arduino IDE, select the board type and port and upload the compiled sketch. </p>
+<p>If everything is working correctly, you should soon see the new devices appear in the Ninja Blocks dashboard. If you're using the beta dashboard, you should see the following new devices appear in the device list on the left:</p>
+<p><img src="images/beta_dash01.png" width="236" height="85"></p>
+<p>The 1504 number indicates the House Code and the Channel, which default to 15 and 04 respectively. The House Code can be set from 1 to 15 and the Channel from 1 to 4.</p>
+<p>The beta dashboard will also show the combined Temperature/Humidity widget.</p>
+<p><img src="images/beta_dash02.png" width="252" height="212"></p>
+<h2>The Arduino Sketch</h2>
+<p>At the top of the sketch, you'll find the code that includes the two libraries:</p>
+<pre><code>#include &lt;DHT.h&gt;
+#include &lt;WT450Sender.h&gt;</code></pre>
+<p>By default, the sketch is set to use Digital Pin 3 for the sensor and Digital Pin 4 for the transmitter. You can change these by modifying the following lines:</p>
+<pre><code>byte sensorPin = 3; // digital pin for DHT sensor
+byte txPin = 4; // digital pin for RF transmitter</code></pre>
+<p>We instantiate the sensor and sender objects like this:</p>
+<pre><code>DHT sensor; // create the sensor object
+WT450Sender sender; // create the sender object</code></pre>
+<p>And set them up in the <code>setup()</code> function:</p>
+<pre><code>sensor.setup(sensorPin);
+sender.setup(txPin, houseCode, channelCode);</code></pre>
+<p>The main <code>loop()</code> function takes care of reading  the sensor data every 20 seconds:</p>
+<pre><code>delay(20000); // send every 20 seconds   
+double t = sensor.getTemperature();
+double h = sensor.getHumidity();</code></pre>    
+<p>And sends it using the WT450 protocol that the Ninja Block inherently knows how to interpret:</p>
+<pre><code>sender.send(h, t); // send the sensor readings</code></pre> 
 <p>&nbsp;</p>
       </section>
     </div>
@@ -69,7 +107,7 @@ We typically use one quarter of the wavelength which works out to just over 17 c
     <!-- FOOTER  -->
     <div id="footer_wrap" class="outer">
       <footer class="inner">
-        <p class="copyright">Temp hum sender maintained by <a href="https://github.com/GraemeWieden">GraemeWieden</a></p>
+        <p class="copyright">Maintained by <a href="https://github.com/GraemeWieden">Graeme Wieden</a></p>
         <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
       </footer>
     </div>
