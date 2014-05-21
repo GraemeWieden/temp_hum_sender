@@ -42,7 +42,7 @@
 <p><img src="images/sensor.jpg" alt="DHT series sensor module" width="118" height="189"></p>
 <p>They're very inexpensive but only have 1 degree Celsius precision. This one was about $3 from DX (<a href="http://www.dx.com/p/121350">http://www.dx.com/p/121350</a>). The DHT22 is a little more expensive but it gives you double the precision as well as being able to handle a much wider range for both temperature and humidity.</p>
 <h2>The RF transmitter module</h2>
-<p>You'll need a 433 MHz RF transmitter that uses OOK (On/Off Keying) modulation.</p>
+<p>You'll need a 433 MHz RF transmitter that uses ASK (Amplitude Shift Keying) modulation.</p>
 <p><img src="images/transmitter.jpg" alt="RF transmitter module" width="132" height="131"></p>
 <p>Again, they cost very little. This one was about $2 from DX (<a href="http://www.dx.com/p/149254">http://www.dx.com/p/149254</a>).</p>
 <p>To get the best range out of the transmitter, you'll also need to add an antenna, but provided it's reasonably close to the Ninja Block, you can do without it while you're prototyping. The antenna should be about 17 cm long. If you're wondering where that figure comes from, the formula is reasonably simple. The exact frequency of these transmitters is 433.92 MHz (433920000 cycles per second) so at (close to) the speed of light (299792458 metres per second) each cycle is:<br>
@@ -71,6 +71,7 @@ We typically use one quarter of the wavelength which works out to just over 17 c
 </ul>
 <p>Download both libraries and place them into your  Arduino <code>libraries</code> directory. If you're not sure where your <code>libraries</code> directory is located, it's a subdirectory of your Arduino sketchbook directory which you can find by selecting 'Preferences' from the 'File' menu in the Arduino IDE.</p>
 <p>So all the files from Mark Ruys's excellent DHT sensor library must be in a <code>DHT</code> directory and all the files from my WT450Sender library must be in a <code>WT450Sender</code> directory.</p>
+<p>In case you're wondering, WT450 is the transmission protocol used by the standard temperature and humidity sender unit that comes with the Ninja Blocks kit. We need to use our own library to send the data with this protocol, as it's slightly different to a lot of other 433 MHz RF devices.</p>
 <h2>Making it work</h2>
 <p>Now that you have all your hardware sorted out and the libraries installed, you can go ahead and get the Arduino sketch from this project's main GitHub repository located here:</p>
 <p><a href="https://github.com/GraemeWieden/temp_hum_sender">https://github.com/GraemeWieden/temp_hum_sender</a></p>
@@ -88,7 +89,11 @@ We typically use one quarter of the wavelength which works out to just over 17 c
 <p>By default, the sketch is set to use Digital Pin 3 for the sensor and Digital Pin 4 for the transmitter. You can change these by modifying the following lines:</p>
 <pre><code>byte sensorPin = 3; // digital pin for DHT sensor
 byte txPin = 4; // digital pin for RF transmitter</code></pre>
-<p>We instantiate the sensor and sender objects like this:</p>
+<p>We also have defaults set for the house code and the channel. These are set to 15 and 4 respectively, however you can change them in the following two lines:</p>
+<pre><code>byte houseCode = 15; // from 1 to 15
+byte channelCode = 4; // from 1 to 4</code></pre>
+<p>Just an additional note here about a bug in the standard Ninja Blocks implementation of the WT450 receiver. Depending on the exact content of the packet, the receiver may filter it out. It all depends on the number of 'ones' in the encoded binary representation of the data. If there are less than 14 'ones' out of the 36 bit total, then the packet will fail. To minimise the chances of this happening, use the default house code of 15 and channel of 4 as they resolve to 1111 and 11 respectively (the house code is 4 bits and is one based but the channel code is 2 bits and zero based).</p>
+<p>Anyway... we instantiate the sensor and sender objects like this:</p>
 <pre><code>DHT sensor; // create the sensor object
 WT450Sender sender; // create the sender object</code></pre>
 <p>And set them up in the <code>setup()</code> function:</p>
